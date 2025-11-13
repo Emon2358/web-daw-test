@@ -93,7 +93,7 @@
                 <!-- 1. ソース音声のロード (for Sampling) -->
                 <div>
                     <h3 class="text-lg font-semibold text-green-400 mb-2">1. ソース音声のロード (for Sampling)</h3>
-                    <p class="text-sm text-gray-400 mb-3">WAV, MP3等、曲全体をロードします。ロード後、下のリストから選択して切り出すにょ。</p>
+                    <p class="text-sm text-gray-400 mb-3">WAV, MP3等、曲全体をロードします。ロード後、下のリストから選択して切り出します。</p>
                     <input type="file" id="sourceAudioUpload" multiple accept="audio/*" class="block w-full text-sm text-gray-400
                         file:mr-4 file:py-2 file:px-4
                         file:rounded-lg file:border-0
@@ -102,7 +102,7 @@
                         hover:file:bg-green-700 cursor-pointer">
                     <!-- ロードされたソース音声リスト -->
                     <div id="sourceAudioList" class="bg-gray-900 p-3 rounded-md h-32 overflow-y-auto border border-gray-700 mt-4">
-                        <p class="text-gray-500">音声ファイルをロードしてにょ...</p>
+                        <p class="text-gray-500">音声ファイルをロードしてください...</p>
                     </div>
                 </div>
 
@@ -110,7 +110,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-green-400 mb-2">2. 波形サンプラー (切り出し)</h3>
                     <div id="samplerEditor" class="bg-gray-900 p-4 rounded-md border border-gray-700">
-                        <p id="samplerStatus" class="text-gray-400 mb-2 text-sm">↑ ソース音声リストからファイルを選択してにょ。</p>
+                        <p id="samplerStatus" class="text-gray-400 mb-2 text-sm">↑ ソース音声リストからファイルを選択してください。</p>
                         
                         <!-- 波形表示 -->
                         <canvas id="waveformCanvas" class="w-full h-24 bg-black rounded-md cursor-crosshair"></canvas>
@@ -126,7 +126,7 @@
 
                 <!-- 3. マイク録音 (サンプリング) -->
                 <div>
-                    <h3 class="text-lg font-semibold text-green-400 mb-2">3. 音声ファイルを録音するにょ (サンプリング)</h3>
+                    <h3 class="text-lg font-semibold text-green-400 mb-2">3. 音声ファイルを録音 (サンプリング)</h3>
                     <div class="flex flex-wrap gap-2 items-center">
                         <button id="recordButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">録音開始</button>
                         <button id="stopRecordButton" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200" disabled>録音停止</button>
@@ -141,9 +141,9 @@
                 <!-- 4. サンプルバンク -->
                 <div>
                     <h3 class="text-lg font-medium text-gray-300 mb-2">4. サンプルバンク (.m44 / .wav / .mp3)</h3>
-                    <p class="text-sm text-gray-400 mb-2">.cfgファイルから参照される音声サンプルだにょ。</p>
+                    <p class="text-sm text-gray-400 mb-2">.cfgファイルから参照される音声サンプルです。</p>
                     <div id="fileList" class="bg-gray-900 p-3 rounded-md h-48 overflow-y-auto border border-gray-700">
-                        <p class="text-gray-500">音声ファイルをロードまたは録音してにょ...</p>
+                        <p class="text-gray-500">音声ファイルをロードまたは録音してください...</p>
                     </div>
                 </div>
             </div>
@@ -233,6 +233,22 @@ c d f c d f b
             let globalGain;                 // グローバルゲイン（Stop用）
             const consoleLog = document.getElementById('consoleLog');
             
+            <!-- ▼▼▼ 修正 (log 関数の定義を追加) ▼▼▼ -->
+            function log(message, isError = false) {
+                if (!consoleLog) {
+                    console.error(message); // コンソール要素が見つからない場合はフォールバック
+                    return;
+                }
+                const p = document.createElement('p');
+                p.textContent = `> ${message}`;
+                if (isError) {
+                    p.className = 'text-red-500';
+                }
+                consoleLog.appendChild(p);
+                consoleLog.scrollTop = consoleLog.scrollHeight; // 自動スクロール
+            }
+            <!-- ▲▲▲ 修正 ▲▲▲ -->
+            
             // ▼▼▼ 新規追加 (サンプラー用) ▼▼▼
             const sourceAudioBuffers = new Map(); // サンプリング元のAudioBuffer
             const sourceAudioList = document.getElementById('sourceAudioList');
@@ -313,7 +329,7 @@ c d f c d f b
                     reader.onerror = () => {
                         log(`Error reading file ${fileName}`, true);
                     };
-                    reader.readAsArrayBuffer(fileObjectOrBlob);
+                    reader.readAsArrayBuffer(file); // 'fileObjectOrBlob' ではなく 'file' を使用
                 });
             });
             
