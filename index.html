@@ -48,7 +48,6 @@
 
     <div class="w-full max-w-7xl mx-auto flex flex-col h-full">
 
-        <!-- 1. ヘッダーとメインコントロール -->
         <header class="mb-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <h1 class="text-xl sm:text-2xl font-bold text-green-400">Web ZMUSIC (X68k Simulator)</h1>
@@ -64,13 +63,10 @@
             <div class="text-sm text-gray-400 mt-1" id="promptDisplay">A:\CD_WORKS\gabba\></div>
         </header>
 
-        <!-- 2. メインレイアウト（ファイル管理 + エディタ） -->
         <div class="flex-1 flex flex-col md:flex-row gap-3 overflow-hidden">
 
-            <!-- 2-1. 左パネル: ファイル管理 -->
             <div class="w-full md:w-1/3 flex flex-col gap-3 overflow-y-auto">
                 
-                <!-- ディレクトリ/ファイル名編集 -->
                 <div class="bg-gray-800 p-3 rounded-lg shadow-inner">
                     <h2 class="text-lg font-bold text-green-400 mb-2 border-b border-gray-700 pb-1">Directory / Files</h2>
                     <div class="flex flex-col gap-2 text-sm">
@@ -89,7 +85,6 @@
                     </div>
                 </div>
 
-                <!-- 1. ソース音声のロード -->
                 <div class="bg-gray-800 p-3 rounded-lg shadow-inner">
                     <h2 class="text-lg font-bold text-green-400 mb-2 border-b border-gray-700 pb-1">1. ソース音声のロード</h2>
                     <p class="text-xs text-gray-400 mb-2">サンプリング（切り出し）用のWAV, MP3, M4A, FLAC等をロードします。</p>
@@ -99,7 +94,6 @@
                     </div>
                 </div>
 
-                <!-- 2. 波形サンプラー (ズーム機能 復活) -->
                 <div class="bg-gray-800 p-3 rounded-lg shadow-inner">
                     <h2 class="text-lg font-bold text-green-400 mb-2 border-b border-gray-700 pb-1">2. 波形サンプラー</h2>
                     <div class="relative mb-2">
@@ -107,7 +101,6 @@
                         <div id="selectionInfo" class="absolute bottom-1 left-1 text-xs bg-black bg-opacity-50 text-white px-1 py-0.5 rounded">
                             Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom
                         </div>
-                        <!-- ズームボタン (復活) -->
                         <div class="absolute top-1 right-1 flex gap-1">
                             <button id="zoomInButton" class="w-6 h-6 bg-gray-700 hover:bg-gray-600 text-white rounded font-bold text-lg leading-none">-</button>
                             <button id="zoomOutButton" class="w-6 h-6 bg-gray-700 hover:bg-gray-600 text-white rounded font-bold text-lg leading-none">+</button>
@@ -120,7 +113,6 @@
                     </div>
                 </div>
 
-                <!-- 3. マイク録音 -->
                 <div class="bg-gray-800 p-3 rounded-lg shadow-inner">
                     <h2 class="text-lg font-bold text-green-400 mb-2 border-b border-gray-700 pb-1">3. マイク録音</h2>
                     <div class="flex gap-2">
@@ -129,7 +121,6 @@
                     </div>
                 </div>
 
-                <!-- 4. サンプルバンク -->
                 <div class="bg-gray-800 p-3 rounded-lg shadow-inner">
                     <h2 class="text-lg font-bold text-green-400 mb-2 border-b border-gray-700 pb-1">4. サンプルバンク (CFGから参照)</h2>
                     <label class="block mb-2">
@@ -143,10 +134,8 @@
 
             </div>
 
-            <!-- 2-2. 右パネル: エディタ -->
             <div class="flex-1 flex flex-col overflow-hidden">
                 
-                <!-- プロジェクト保存/読み込み -->
                 <div class="flex flex-wrap gap-2 mb-3">
                     <button id="saveProjectButton" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold text-sm">Save Project</button>
                     <label class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded-md text-white font-semibold text-sm cursor-pointer">
@@ -155,7 +144,6 @@
                     </label>
                 </div>
 
-                <!-- スマホ用タブ -->
                 <div class="md:hidden border-b border-gray-700 mb-2">
                     <nav class="flex -mb-px" id="tabContainer">
                         <button data-tab="tab1" class="tab-button flex-1 whitespace-nowrap py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-400 hover:text-green-400 hover:border-green-400">
@@ -173,10 +161,8 @@
                     </nav>
                 </div>
 
-                <!-- エディタ本体 -->
                 <div class="flex-1 main-grid overflow-hidden">
                     
-                    <!-- BAT Editor -->
                     <div id="tab1" class="tab-content flex flex-col h-full min-h-[150px]">
                         <label id="playBatLabel" for="batEditor" class="text-sm text-green-400 mb-1 block">gabba.BAT</label>
                         <textarea id="batEditor" class="flex-1 w-full bg-gray-800 text-white p-2 rounded-md shadow-inner border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none">pcm8pp -c8 -f7
@@ -186,7 +172,6 @@ zp gabba.zms
 </textarea>
                     </div>
 
-                    <!-- STOP BAT Editor -->
                     <div id="tab2" class="tab-content flex flex-col h-full min-h-[150px]">
                         <label id="stopBatLabel" for="stopBatEditor" class="text-sm text-green-400 mb-1 block">STOP.BAT</label>
                         <textarea id="stopBatEditor" class="flex-1 w-full bg-gray-800 text-white p-2 rounded-md shadow-inner border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none">zp -s
@@ -195,7 +180,6 @@ pcm8pp -r
 </textarea>
                     </div>
 
-                    <!-- CFG Editor -->
                     <div id="tab3" class="tab-content flex flex-col h-full min-h-[200px]">
                         <label id="cfgLabel" for="cfgEditor" class="text-sm text-green-400 mb-1 block">gabba.cfg</label>
                         <textarea id="cfgEditor" class="flex-1 w-full bg-gray-800 text-white p-2 rounded-md shadow-inner border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none">/* ADPCM BANK1
@@ -213,11 +197,10 @@ pcm8pp -r
 </textarea>
                     </div>
 
-                    <!-- ZMS Editor -->
                     <div id="tab4" class="tab-content flex flex-col h-full min-h-[200px]">
                         <label id="zmsLabel" for="zmsEditor" class="text-sm text-green-400 mb-1 block">gabba.zms</label>
-                        <textarea id="zmsEditor" class="flex-1 w-full bg-gray-800 text-white p-2 rounded-md shadow-inner border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none">[L
-t140
+                        <textarea id="zmsEditor" class="flex-1 w-full bg-gray-800 text-white p-2 rounded-md shadow-inner border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none">t140
+[L
 A o4 l8 c r c r c r c r
 B o4 l8 r r d r r r d r
 C o4 l8 r f r f r f r f
@@ -227,7 +210,6 @@ L]</textarea>
             </div>
         </div>
 
-        <!-- 3. フッター (コンソールログ) -->
         <footer class="h-20 md:h-16 mt-3 overflow-y-auto bg-gray-800 p-2 rounded-md shadow-inner text-sm" id="consoleLog">
             <span class="text-gray-400">> Web ZMUSIC Simulator initialized. Ready.</span><br>
         </footer>
@@ -244,13 +226,13 @@ L]</textarea>
         let mmlLoopTimeout = null; // ループ再生用のタイマー
         let isMMLPlaying = false;
         
-        // 波形サンプラー用 (ズーム機能 復活)
+        // 波形サンプラー用
         let currentSamplerBuffer = null;
         let selectionStartSample = 0;
         let selectionEndSample = 0;
         let isDragging = false;
-        let zoomLevel = 1; // (復活)
-        let viewOffset = 0; // (復活)
+        let zoomLevel = 1; 
+        let viewOffset = 0; // 0.0 ~ 1.0 (パーセンテージ)
         
         // --- DOM取得 ---
         const $ = (selector) => document.getElementById(selector);
@@ -278,15 +260,15 @@ L]</textarea>
         const loadProjectInput = $('loadProjectInput');
         const recordSaveName = $('recordSaveName');
         
-        // 波形サンプラー DOM (ズーム機能 復活)
+        // 波形サンプラー DOM
         const waveformCanvas = $('waveformCanvas');
         const canvasCtx = waveformCanvas.getContext('2d');
         const selectionInfo = $('selectionInfo');
         const sampleSaveName = $('sampleSaveName');
         const saveSampleButton = $('saveSampleButton');
-        const zoomInButton = $('zoomInButton'); // (復活)
-        const zoomOutButton = $('zoomOutButton'); // (復活)
-        const zoomAllButton = $('zoomAllButton'); // (復活)
+        const zoomInButton = $('zoomInButton');
+        const zoomOutButton = $('zoomOutButton');
+        const zoomAllButton = $('zoomAllButton');
 
         // --- ログ関数 ---
         function log(message, type = 'info') {
@@ -296,30 +278,21 @@ L]</textarea>
         }
 
         // --- 1. オーディオ初期化 (最重要) ---
-        /**
-         * AudioContextを初期化または再開します。
-         * ブラウザの自動再生ポリシー対策のため、ユーザー操作のたびに呼び出されます。
-         */
         async function initAudio() {
             if (audioContext && audioContext.state === 'running') {
                 return true; // 既に実行中
             }
-            
             try {
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
-                
                 if (audioContext.state === 'suspended') {
                     await audioContext.resume();
                 }
-                
                 if (audioContext.state !== 'running') {
                     throw new Error('AudioContext is not running.');
                 }
-                
                 return true;
-                
             } catch (e) {
                 log(`AudioContextの初期化/再開に失敗しました: ${e.message}`, 'error');
                 return false;
@@ -327,15 +300,8 @@ L]</textarea>
         }
         
         // --- 2. 音声ファイル処理 ---
-
-        /**
-         * 汎用ファイルデコーダー
-         * @param {File} file - ロードするファイル
-         * @returns {Promise<{name: string, buffer: AudioBuffer}>}
-         */
         async function decodeAudioFile(file) {
             if (!(await initAudio())) return null;
-
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
@@ -356,9 +322,6 @@ L]</textarea>
             });
         }
 
-        /**
-         * ソース音声リストを更新
-         */
         function updateSourceAudioList() {
             sourceAudioList.innerHTML = '';
             if (sourceAudioBuffers.size === 0) {
@@ -374,9 +337,6 @@ L]</textarea>
             });
         }
         
-        /**
-         * サンプルバンク（MMLから参照）リストを更新
-         */
         function updateSampleBankList() {
             sampleBankList.innerHTML = '';
             if (audioBuffers.size === 0) {
@@ -386,10 +346,8 @@ L]</textarea>
             audioBuffers.forEach((buffer, name) => {
                 const div = document.createElement('div');
                 div.className = 'p-1 hover:bg-gray-700 cursor-pointer text-green-300 flex justify-between items-center';
-                
                 const span = document.createElement('span');
                 span.textContent = `${name} (${buffer.duration.toFixed(2)}s)`;
-                
                 const playBtn = document.createElement('button');
                 playBtn.textContent = '▶';
                 playBtn.className = 'text-xs px-1 rounded bg-blue-500 hover:bg-blue-400';
@@ -398,16 +356,12 @@ L]</textarea>
                     if (!(await initAudio())) return;
                     playSample(buffer);
                 };
-
                 div.appendChild(span);
                 div.appendChild(playBtn);
                 sampleBankList.appendChild(div);
             });
         }
 
-        /**
-         * [1. ソース音声のロード] (サンプラー用)
-         */
         sourceAudioUpload.onchange = async (e) => {
             if (!(await initAudio())) return;
             log('ソース音声のロード中...', 'info');
@@ -416,17 +370,12 @@ L]</textarea>
                     const { name, buffer } = await decodeAudioFile(file);
                     sourceAudioBuffers.set(name, buffer);
                     log(`Loaded source audio: ${name}`, 'success');
-                } catch (err) {
-                    // エラーはdecodeAudioFile内でログ済み
-                }
+                } catch (err) {}
             }
             updateSourceAudioList();
-            sourceAudioUpload.value = ''; // 次回同じファイルをロードできるように
+            sourceAudioUpload.value = '';
         };
 
-        /**
-         * [4. サンプルバンクにロード] (直接ロード)
-         */
         bankAudioUpload.onchange = async (e) => {
             if (!(await initAudio())) return;
             log('サンプルバンクへのロード中...', 'info');
@@ -435,19 +384,12 @@ L]</textarea>
                     const { name, buffer } = await decodeAudioFile(file);
                     audioBuffers.set(name, buffer);
                     log(`Loaded to bank: ${name}`, 'success');
-                } catch (err) {
-                    // エラーはdecodeAudioFile内でログ済み
-                }
+                } catch (err) {}
             }
             updateSampleBankList();
             bankAudioUpload.value = '';
         };
 
-        /**
-         * サンプルバンクにAudioBufferを直接追加 (録音/切り出し用)
-         * @param {AudioBuffer} buffer
-         * @param {string} name
-         */
         function addAudioBufferToBank(buffer, name) {
             if (!name) {
                 log('ファイル名が指定されていません。', 'error');
@@ -458,11 +400,7 @@ L]</textarea>
             log(`「${name}」をサンプルバンクに保存しました。`, 'success');
         }
 
-        // --- 3. 波形サンプラー (切り出し) ---
-
-        /**
-         * ソース音声をサンプラーに読み込む
-         */
+        // --- 3. 波形サンプラー (ズーム機能 復活) ---
         function loadSourceToSampler(name) {
             const buffer = sourceAudioBuffers.get(name);
             if (!buffer) {
@@ -471,74 +409,58 @@ L]</textarea>
             }
             currentSamplerBuffer = buffer;
             sampleSaveName.value = `SMPL_${name.split('.')[0]}.m44`;
-            
-            // ズームと選択範囲をリセット (復活)
             selectionStartSample = 0;
             selectionEndSample = buffer.length;
             zoomLevel = 1;
             viewOffset = 0;
-            
             drawWaveform();
             log(`サンプラーにロード: ${name}`, 'info');
         }
         
-        /**
-         * 波形を描画 (ズーム機能 復活)
-         */
         function drawWaveform() {
             if (!currentSamplerBuffer || !canvasCtx) return;
 
             const data = currentSamplerBuffer.getChannelData(0);
             const w = waveformCanvas.width;
             const h = waveformCanvas.height;
-
-            canvasCtx.fillStyle = '#000000'; // bg-black
+            canvasCtx.fillStyle = '#000000';
             canvasCtx.fillRect(0, 0, w, h);
 
-            // 表示範囲のサンプル数を計算 (ズーム対応)
             const totalSamples = currentSamplerBuffer.length;
             const viewSamples = Math.floor(totalSamples / zoomLevel);
             const startSample = Math.max(0, Math.floor(totalSamples * viewOffset));
             const endSample = Math.min(totalSamples, startSample + viewSamples);
 
             canvasCtx.lineWidth = 1;
-            canvasCtx.strokeStyle = '#34d399'; // 明るい緑
+            canvasCtx.strokeStyle = '#34d399';
             canvasCtx.beginPath();
 
             const step = Math.max(1, Math.floor(viewSamples / w));
             
             for (let i = 0; i < w; i++) {
                 const sampleIndex = startSample + Math.floor((i / w) * viewSamples);
-                
-                let min = 1.0;
-                let max = -1.0;
-                
-                // 1ピクセル分の範囲の最小値と最大値を探す
+                let min = 1.0, max = -1.0;
                 for(let j = 0; j < step; j++) {
                     const s = data[sampleIndex + j];
                     if (s < min) min = s;
                     if (s > max) max = s;
                 }
-
                 const y_max = (max * 0.5 + 0.5) * h;
                 const y_min = (min * 0.5 + 0.5) * h;
-
                 canvasCtx.moveTo(i, y_max);
                 canvasCtx.lineTo(i, y_min);
             }
             canvasCtx.stroke();
 
-            // 選択範囲を描画 (ズーム対応)
             const selStartPixel = ((selectionStartSample - startSample) / viewSamples) * w;
             const selEndPixel = ((selectionEndSample - startSample) / viewSamples) * w;
 
             if (selEndPixel > selStartPixel) {
-                canvasCtx.fillStyle = 'rgba(74, 222, 128, 0.4)'; // green-400 with alpha
+                canvasCtx.fillStyle = 'rgba(74, 222, 128, 0.4)';
                 canvasCtx.fillRect(selStartPixel, 0, selEndPixel - selStartPixel, h);
             }
         }
         
-        // リサイズ対応
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 if (entry.target === waveformCanvas) {
@@ -550,19 +472,15 @@ L]</textarea>
         });
         resizeObserver.observe(waveformCanvas);
 
-        // サンプラーのクリック/ドラッグ操作 (ズーム対応)
         waveformCanvas.onmousedown = (e) => {
             if (!currentSamplerBuffer) return;
             isDragging = true;
             const rect = waveformCanvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const pixelRatio = x / waveformCanvas.width;
-
-            // ズームを考慮したサンプル位置
             const totalSamples = currentSamplerBuffer.length;
             const viewSamples = totalSamples / zoomLevel;
             const startSample = totalSamples * viewOffset;
-
             selectionStartSample = startSample + Math.floor(pixelRatio * viewSamples);
             selectionEndSample = selectionStartSample;
             drawWaveform();
@@ -573,74 +491,56 @@ L]</textarea>
             const rect = waveformCanvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const pixelRatio = x / waveformCanvas.width;
-
-            // ズームを考慮したサンプル位置
             const totalSamples = currentSamplerBuffer.length;
             const viewSamples = totalSamples / zoomLevel;
             const startSample = totalSamples * viewOffset;
-            
             selectionEndSample = startSample + Math.floor(pixelRatio * viewSamples);
-            
-            // 選択範囲が逆にならないように (スワップ)
             if (selectionEndSample < selectionStartSample) {
-                let temp = selectionStartSample;
-                selectionStartSample = selectionEndSample;
-                selectionEndSample = temp;
+                [selectionStartSample, selectionEndSample] = [selectionEndSample, selectionStartSample];
             }
-            
             drawWaveform();
         };
 
         window.onmouseup = () => {
-            if (isDragging) {
-                isDragging = false;
-                drawWaveform(); // 最終的な選択範囲で再描画
-            }
+            isDragging = false;
         };
 
-        // サンプラーのズーム/パン操作 (復活)
         waveformCanvas.onwheel = (e) => {
             e.preventDefault();
             if (!currentSamplerBuffer) return;
 
+            const totalSamples = currentSamplerBuffer.length;
+
             if (e.ctrlKey) {
-                // ズーム (Ctrl + Wheel)
+                // ズーム
                 const rect = waveformCanvas.getBoundingClientRect();
                 const x = e.clientX - rect.left;
-                const mousePosRatio = x / waveformCanvas.width; // 0.0 - 1.0
-                
-                const delta = e.deltaY < 0 ? 1.25 : 0.8; // ズーム率 (ホイールの方向を反転)
-                const newZoomLevel = Math.max(1, Math.min(zoomLevel * delta, currentSamplerBuffer.length / 100)); // 最小100サンプルまで
-
+                const mousePosRatio = x / waveformCanvas.width;
+                const delta = e.deltaY < 0 ? 1.5 : 1 / 1.5; // ホイールの方向を修正
+                const newZoomLevel = Math.max(1, Math.min(zoomLevel * delta, totalSamples / 100)); // 最小100サンプル
                 if (newZoomLevel === zoomLevel) return;
-
-                // ズーム中心をマウスカーソル位置に合わせる
-                const viewSamples = currentSamplerBuffer.length / zoomLevel;
-                const mouseSample = (currentSamplerBuffer.length * viewOffset) + (mousePosRatio * viewSamples);
                 
+                const viewSamples = totalSamples / zoomLevel;
+                const mouseSample = (totalSamples * viewOffset) + (mousePosRatio * viewSamples);
                 zoomLevel = newZoomLevel;
-                
-                const newViewSamples = currentSamplerBuffer.length / zoomLevel;
-                viewOffset = (mouseSample - (mousePosRatio * newViewSamples)) / currentSamplerBuffer.length;
+                const newViewSamples = totalSamples / zoomLevel;
+                viewOffset = (mouseSample - (mousePosRatio * newViewSamples)) / totalSamples;
 
             } else {
-                // パン (Wheel)
+                // パン
                 const delta = e.deltaY > 0 ? 0.05 : -0.05;
                 viewOffset += delta / zoomLevel;
             }
 
-            // viewOffsetの範囲を制限
             const maxViewOffset = 1.0 - (1.0 / zoomLevel);
             viewOffset = Math.max(0, Math.min(viewOffset, maxViewOffset));
-            
             drawWaveform();
         };
 
-        // ズームボタン (復活)
         zoomInButton.onclick = () => { // - (縮小)
             if (!currentSamplerBuffer) return;
             zoomLevel = Math.max(1, zoomLevel / 1.5);
-            viewOffset = Math.min(viewOffset, 1.0 - (1.0 / zoomLevel)); // オフセット調整
+            viewOffset = Math.min(viewOffset, 1.0 - (1.0 / zoomLevel));
             drawWaveform();
         };
         zoomOutButton.onclick = () => { // + (拡大)
@@ -655,49 +555,29 @@ L]</textarea>
             drawWaveform();
         };
 
-        /**
-         * [切り出し保存] ボタン
-         */
         saveSampleButton.onclick = async () => {
-            if (!currentSamplerBuffer) {
-                log('サンプラーにソース音声がロードされていません。', 'error');
+            if (!currentSamplerBuffer || selectionStartSample === selectionEndSample || !sampleSaveName.value) {
+                log('ソース、選択範囲、または保存名がありません。', 'error');
                 return;
             }
-            if (selectionStartSample === selectionEndSample) {
-                log('切り出し範囲が選択されていません。', 'error');
-                return;
-            }
-            if (!sampleSaveName.value) {
-                log('保存ファイル名を入力してください。', 'error');
-                return;
-            }
-
             if (!(await initAudio())) return;
 
-            // 選択範囲が逆転していても大丈夫なように
             const start = Math.min(selectionStartSample, selectionEndSample);
             const end = Math.max(selectionStartSample, selectionEndSample);
             const length = end - start;
-            
-            if (length <= 0) {
-                 log('切り出し範囲がありません。', 'error');
-                return;
-            }
+            if (length <= 0) return;
 
             const channels = currentSamplerBuffer.numberOfChannels;
             const rate = currentSamplerBuffer.sampleRate;
 
             try {
                 const newBuffer = audioContext.createBuffer(channels, length, rate);
-
                 for (let i = 0; i < channels; i++) {
                     const oldData = currentSamplerBuffer.getChannelData(i);
                     const newData = newBuffer.getChannelData(i);
                     newData.set(oldData.subarray(start, end));
                 }
-                
                 addAudioBufferToBank(newBuffer, sampleSaveName.value);
-
             } catch (e) {
                 log(`切り出しに失敗しました: ${e.message}`, 'error');
             }
@@ -706,32 +586,21 @@ L]</textarea>
         // --- 4. マイク録音 ---
         recordButton.onclick = async () => {
             if (!(await initAudio())) return;
-
             if (mediaRecorder && mediaRecorder.state === 'recording') {
-                // 停止処理
                 mediaRecorder.stop();
                 recordButton.textContent = '● REC';
                 recordButton.classList.remove('animate-pulse', 'bg-red-800');
                 log('録音を停止しました。', 'info');
             } else {
-                // 開始処理
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
                     recordedChunks = [];
-
-                    mediaRecorder.ondataavailable = (e) => {
-                        if (e.data.size > 0) {
-                            recordedChunks.push(e.data);
-                        }
-                    };
-
+                    mediaRecorder.ondataavailable = (e) => e.data.size > 0 && recordedChunks.push(e.data);
                     mediaRecorder.onstop = async () => {
                         const blob = new Blob(recordedChunks, { type: 'audio/wav' });
                         const arrayBuffer = await blob.arrayBuffer();
-                        
                         if (!(await initAudio())) return;
-
                         try {
                             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                             const saveName = recordSaveName.value || `REC_${new Date().toISOString()}.wav`;
@@ -739,16 +608,12 @@ L]</textarea>
                         } catch(e) {
                             log(`録音データのデコードに失敗しました: ${e.message}`, 'error');
                         }
-                        
-                        // ストリームを停止
                         stream.getTracks().forEach(track => track.stop());
                     };
-
                     mediaRecorder.start();
                     recordButton.textContent = '■ STOP';
                     recordButton.classList.add('animate-pulse', 'bg-red-800');
                     log('録音開始...', 'info');
-
                 } catch (err) {
                     log(`マイクへのアクセスに失敗しました: ${err.message}`, 'error');
                 }
@@ -756,11 +621,6 @@ L]</textarea>
         };
 
         // --- 5. サンプル再生 ---
-        /**
-         * AudioBufferを再生（プレビュー/MML再生用）
-         * @param {AudioBuffer} buffer 
-         * @param {number} startTime (オプション) AudioContextの開始時間
-         */
         function playSample(buffer, startTime = 0) {
             try {
                 const source = audioContext.createBufferSource();
@@ -772,40 +632,33 @@ L]</textarea>
             }
         }
         
-        // --- 6. MML再生エンジン (ループ機能 搭載) ---
-        
-        // .cfgファイル（ノート割り当て）をパース
+        // --- 6. MML再生エンジン (テンポ修正版) ---
         function parseConfig(cfgText) {
             const noteMap = new Map();
-            // .m44 だけでなく、一般的な音声拡張子も許可する
             const noteRegex = /^\.o([0-7])([a-g])([+#-]?)\s*=\s*(.+)$/i;
             const bankRegex = /^\.adpcm_bank=(\d+)$/i;
-            
             let currentBank = 1;
-            
+
             cfgText.split('\n').forEach(line => {
                 line = line.trim();
-                
                 const bankMatch = line.match(bankRegex);
                 if (bankMatch) {
                     currentBank = parseInt(bankMatch[1], 10);
                     return;
                 }
-                
                 const noteMatch = line.match(noteRegex);
                 if (noteMatch) {
                     const octave = parseInt(noteMatch[1], 10);
                     const note = noteMatch[2].toLowerCase();
-                    const accidental = noteMatch[3]; // #, + (TODO: 未実装)
+                    const accidental = noteMatch[3]; // #, +
                     const filename = noteMatch[4].trim();
-                    
-                    // ZMUSICのノート番号 (o0c = 0)
                     const noteNames = { 'c': 0, 'd': 2, 'e': 4, 'f': 5, 'g': 7, 'a': 9, 'b': 11 };
-                    const noteIndex = noteNames[note];
+                    let noteIndex = noteNames[note];
                     if (noteIndex === undefined) return;
+                    if (accidental === '#' || accidental === '+') noteIndex++;
+                    // TODO: 'b' (flat)
                     
                     const midiNote = (octave * 12) + noteIndex;
-                    
                     const key = `${currentBank}-${midiNote}`;
                     
                     if (audioBuffers.has(filename)) {
@@ -818,189 +671,193 @@ L]</textarea>
             return noteMap;
         }
 
-        // MMLをパースして再生 (高機能版)
         async function startMML() {
-            if (isMMLPlaying) {
-                stopMML();
-            }
-            
+            if (isMMLPlaying) stopMML();
             if (!(await initAudio())) {
-                log('AudioContextが起動できません。再生を開始できません。', 'error');
+                log('AudioContextが起動できません。', 'error');
                 return;
             }
 
-            // 1. BATファイルから .zms と .cfg ファイル名を取得
             const batText = batEditor.value;
             const zpMatch = batText.match(/zp\s+([\w\.]+)/);
             if (!zpMatch) {
                 log('BATファイルに `zp (ファイル名)` が見つかりません。', 'error');
                 return;
             }
+            
+            // BATファイルからzms/cfgファイル名を取得
             const zmsFileName = zpMatch[1];
-            
-            // zms/cfgがエディタ上のファイル名と一致するかチェック (簡易的)
-            if (zmsFileName !== zmsLabel.textContent) {
-                log(`BATが指定する ${zmsFileName} は ${zmsLabel.textContent} と一致しません。`, 'error');
-                // TODO: 本来はファイル名ベースでエディタを切り替えるべき
-            }
-            
-            const cfgFileName = zmsFileName.replace(/\.zms$/i, '.cfg');
-            if (cfgFileName !== cfgLabel.textContent) {
-                 log(`CFG Warning: ${cfgFileName} (推定) が ${cfgLabel.textContent} (現在) と一致しません。`, 'error');
-            }
+            const cfgFileName = zmsLabel.textContent === zmsFileName ? cfgLabel.textContent : zmsFileName.replace(/\.zms$/i, '.cfg');
 
+            if (zmsFileName !== zmsLabel.textContent || cfgFileName !== cfgLabel.textContent) {
+                 log(`Warning: BATの指定(${zmsFileName})とエディタのファイル名(${zmsLabel.textContent})が一致しません。`, 'error');
+            }
+            
             const mmlText = zmsEditor.value;
             const cfgText = cfgEditor.value;
-            
             const noteMap = parseConfig(cfgText);
-            if (noteMap.size === 0) {
-                log('CFGから音源が割り当てられませんでした。', 'error');
-                return;
-            }
 
+            if (noteMap.size === 0) log('CFGから音源が割り当てられませんでした。', 'error');
             log('MML再生開始...', 'success');
             isMMLPlaying = true;
-            
+
             // --- MMLパーサー & スケジューラー ---
-            
-            // 状態管理
-            const tracks = {}; // トラックごとの状態 (A, B, C...)
-            const trackLines = {}; // トラックごとのMML行
-            let globalTempo = 120;
-            
-            // MMLの前処理 (ループとトラック分割)
             const loopMatch = mmlText.match(/\[L([\s\S]+)L\]/i);
             const mmlToParse = loopMatch ? loopMatch[1] : mmlText;
             const hasLoop = !!loopMatch;
 
+            // グローバルステート
+            const globalState = {
+                tempo: 120,
+                quarterNoteTime: 0.5, // t120の時の4分音符の秒数
+            };
+            
+            // 1. テンポのグローバルスキャン
+            const globalTempoMatch = mmlText.match(/^t(\d+)/im); // 先頭のtを優先
+            if (globalTempoMatch) {
+                globalState.tempo = parseInt(globalTempoMatch[1], 10);
+                globalState.quarterNoteTime = 60.0 / globalState.tempo;
+                log(`Global tempo set to ${globalState.tempo} BPM`, 'info');
+            }
+
+            // 2. トラックごとにMMLを分割
+            const trackLines = {};
             mmlToParse.split('\n').forEach(line => {
                 line = line.trim();
                 const trackMatch = line.match(/^([A-Z])\s+(.*)/i); // A o4 c d e
-                const tempoMatch = line.match(/^t(\d+)/i); // t120
-                
                 if (trackMatch) {
                     const trackId = trackMatch[1].toUpperCase();
-                    const commands = trackMatch[2];
-                    if (!trackLines[trackId]) trackLines[trackId] = [];
-                    trackLines[trackId].push(commands);
-                } else if (tempoMatch) {
-                    globalTempo = parseInt(tempoMatch[1], 10);
+                    if (!trackLines[trackId]) trackLines[trackId] = '';
+                    trackLines[trackId] += trackMatch[2] + ' '; // コマンドを連結
                 }
             });
 
-            // 60BPMの4分音符の秒数
-            const quarterNoteTime = 60.0 / globalTempo;
-
-            function getNoteDuration(l, dots) {
-                let duration = (4.0 / l) * quarterNoteTime;
-                if (dots === 1) duration *= 1.5;
-                if (dots === 2) duration *= 1.75;
-                return duration;
-            }
-
-            // 再帰的なスケジューリング関数
+            // 3. 再帰スケジューラー
             function scheduleTracks(startTime) {
-                if (!isMMLPlaying) return; // 停止していたらスケジューリングしない
-
+                if (!isMMLPlaying) return;
                 log(`Scheduling loop at ${startTime.toFixed(2)}s`, 'info');
                 
-                let maxTrackTime = 0;
+                let maxTrackTime = startTime; // ループの終端時間
 
-                // 各トラックを独立して処理
                 for (const trackId in trackLines) {
-                    let T = {
+                    const trackState = {
                         octave: 4,
-                        length: 4, // デフォルト4分音符
-                        bank: 1, // TODO: .adpcm_bank=N に対応
-                        currentTime: startTime, // このトラックの現在のタイムライン (AudioContext時間)
+                        length: 4,
+                        dots: 0,
+                        bank: 1,
+                        currentTime: startTime,
                     };
                     
-                    const mmlCommands = trackLines[trackId].join(' ');
-                    const tokens = mmlCommands.match(/[a-g][+#-]?\d*\.*|r\d*\.*|o\d|<|>|l\d*\.*|t\d+/gi) || [];
-
-                    for (const token of tokens) {
-                        if (!isMMLPlaying) break; // 処理中に停止された
-                        
-                        let note, len, dots;
-                        
-                        const noteMatch = token.match(/^([a-g][+#-]?|r)(\d*)(\.*)/i);
-                        if (noteMatch) {
-                            note = noteMatch[1].toLowerCase();
-                            len = noteMatch[2] ? parseInt(noteMatch[2], 10) : T.length;
-                            dots = noteMatch[3].length;
-
-                            const duration = getNoteDuration(len, dots);
-
-                            if (note !== 'r') {
-                                // ノートを再生
-                                const noteNames = { 'c': 0, 'd': 2, 'e': 4, 'f': 5, 'g': 7, 'a': 9, 'b': 11 };
-                                const noteIndex = noteNames[note[0]];
-                                // TODO: # + -
-                                
-                                if (noteIndex !== undefined) {
-                                    const midiNote = (T.octave * 12) + noteIndex;
-                                    const key = `${T.bank}-${midiNote}`;
-                                    
-                                    if (noteMap.has(key)) {
-                                        playSample(noteMap.get(key), T.currentTime);
-                                    }
-                                }
-                            }
-                            
-                            T.currentTime += duration; // 次のノートの開始時間を更新
-                        
-                        } else if (token.match(/^o\d/i)) {
-                            T.octave = parseInt(token.substring(1), 10);
-                        } else if (token === '<') {
-                            T.octave--;
-                        } else if (token === '>') {
-                            T.octave++;
-                        } else if (token.match(/^l\d*/i)) {
-                            const lenMatch = token.match(/^l(\d*)(\.*)/i);
-                            T.length = lenMatch[1] ? parseInt(lenMatch[1], 10) : T.length;
-                            // TODO: Lに付点 . (ZMUSIC仕様？)
-                        } else if (token.match(/^t\d+/i)) {
-                            // TODO: テンポチェンジ (グローバルテンポの変更は複雑)
-                        }
-                    }
+                    const scheduledEvents = parseMML(trackLines[trackId], trackState, globalState, noteMap);
                     
-                    // このトラックの終了時間
-                    if (T.currentTime > maxTrackTime) {
-                        maxTrackTime = T.currentTime;
+                    // Web Audio APIにスケジュール
+                    scheduledEvents.forEach(event => {
+                        if (event.buffer) {
+                            playSample(event.buffer, event.time);
+                        }
+                    });
+
+                    const lastEvent = scheduledEvents[scheduledEvents.length - 1];
+                    const trackEndTime = lastEvent ? lastEvent.time + lastEvent.duration : startTime;
+                    
+                    if (trackEndTime > maxTrackTime) {
+                        maxTrackTime = trackEndTime;
                     }
-                } // End for (trackId)
+                }
 
                 // ループ処理
                 if (hasLoop && isMMLPlaying) {
                     const loopDuration = maxTrackTime - startTime;
                     if (loopDuration > 0) {
                         const delayInMs = (maxTrackTime - audioContext.currentTime) * 1000;
-                        
-                        // 次のループをスケジュール
                         mmlLoopTimeout = setTimeout(() => {
-                            if (isMMLPlaying) {
-                                scheduleTracks(maxTrackTime); // 次のループを開始
-                            }
-                        }, Math.max(0, delayInMs - 50)); // 50ms早くスケジュールして途切れを防止
-                        
+                            if (isMMLPlaying) scheduleTracks(maxTrackTime);
+                        }, Math.max(0, delayInMs - 50)); // 50ms早くスケジュール
                         mmlTimeouts.push(mmlLoopTimeout);
                     } else {
-                        log('ループ時間が0です。ループを停止します。', 'error');
+                        log('ループ時間が0です。', 'error');
                     }
+                } else if (!hasLoop) {
+                     isMMLPlaying = false; // ループなしなら再生終了
+                     log('MML playback finished.', 'success');
                 }
-            } // End scheduleTracks
+            }
 
             // 初回実行
             scheduleTracks(audioContext.currentTime);
+        }
 
-        } // End startMML
+        /**
+         * 強化版MMLパーサー
+         * @returns {Array} スケジュールするイベントの配列 [{time, duration, buffer}]
+         */
+        function parseMML(mmlCommands, trackState, globalState, noteMap) {
+            const events = [];
+            const noteNames = { 'c': 0, 'd': 2, 'e': 4, 'f': 5, 'g': 7, 'a': 9, 'b': 11 };
+            // T(テンポ), L(音長), O(オクターブ), <, >, Note(a-g), Rest(r)
+            const regex = /(t\d+)|(l\d+\.?)|(o\d)|([<>])|([a-gr][+#-]?\d*\.?)/gi;
+            let match;
+
+            while ((match = regex.exec(mmlCommands)) !== null) {
+                const token = match[0].toLowerCase();
+                
+                if (match[1]) { // T (Tempo)
+                    globalState.tempo = parseInt(token.substring(1), 10);
+                    globalState.quarterNoteTime = 60.0 / globalState.tempo;
+                } 
+                else if (match[2]) { // L (Length)
+                    const lenMatch = token.match(/l(\d+)(\.?)?/);
+                    trackState.length = parseInt(lenMatch[1], 10);
+                    trackState.dots = lenMatch[2] ? lenMatch[2].length : 0;
+                } 
+                else if (match[3]) { // O (Octave)
+                    trackState.octave = parseInt(token.substring(1), 10);
+                } 
+                else if (match[4]) { // < or >
+                    if (token === '<') trackState.octave--;
+                    if (token === '>') trackState.octave++;
+                } 
+                else if (match[5]) { // Note or Rest
+                    const noteMatch = token.match(/([a-gr])([+#-]?)(\d*)(\.*)?/);
+                    const note = noteMatch[1];
+                    const accidental = noteMatch[2];
+                    const lenStr = noteMatch[3];
+                    const dotsStr = noteMatch[4];
+                    
+                    const length = lenStr ? parseInt(lenStr, 10) : trackState.length;
+                    const dots = dotsStr ? dotsStr.length : trackState.dots;
+
+                    // 4分音符の秒数からデュレーションを計算
+                    let duration = (4.0 / length) * globalState.quarterNoteTime;
+                    if (dots === 1) duration *= 1.5;
+                    if (dots === 2) duration *= 1.75;
+                    
+                    let buffer = null;
+                    if (note !== 'r') {
+                        let noteIndex = noteNames[note];
+                        if (accidental === '#' || accidental === '+') noteIndex++;
+                        // TODO: '-' (flat)
+                        const midiNote = (trackState.octave * 12) + noteIndex;
+                        const key = `${trackState.bank}-${midiNote}`;
+                        buffer = noteMap.get(key) || null;
+                    }
+                    
+                    events.push({
+                        time: trackState.currentTime,
+                        duration: duration,
+                        buffer: buffer
+                    });
+                    
+                    trackState.currentTime += duration;
+                }
+            }
+            return events;
+        }
 
         function stopMML() {
             if (!isMMLPlaying) return;
-            
             isMMLPlaying = false;
             
-            // スケジュールされたすべてのノートとループをキャンセル
             mmlTimeouts.forEach(timer => clearTimeout(timer));
             mmlTimeouts = [];
             if (mmlLoopTimeout) {
@@ -1008,11 +865,9 @@ L]</textarea>
                 mmlLoopTimeout = null;
             }
             
-            // 現在再生中の音を止める (Web Audio APIでは難しいが、擬似的に)
-            // AudioContextを止めて再起動するのが確実
-            if (audioContext) {
+            if (audioContext && audioContext.state === 'running') {
                 audioContext.close().then(() => {
-                    audioContext = null; // initAudio() で再作成される
+                    audioContext = null; 
                     log('MML再生停止。AudioContextをリセットしました。', 'info');
                 });
             } else {
@@ -1022,55 +877,32 @@ L]</textarea>
         
         // --- 7. プロジェクトのセーブ＆ロード ---
         
-        /**
-         * AudioBufferをWAV (Base64) に変換
-         * (簡易エンコーダー)
-         */
         function audioBufferToWavBase64(buffer) {
             function writeString(view, offset, string) {
-                for (let i = 0; i < string.length; i++) {
-                    view.setUint8(offset + i, string.charCodeAt(i));
-                }
+                for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
             }
-            
-            function floatTo16BitPCM(output, offset, input) {
-                for (let i = 0; i < input.length; i++, offset += 2) {
-                    let s = Math.max(-1, Math.min(1, input[i]));
-                    output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-                }
-            }
-
-            const numChannels = buffer.numberOfChannels;
-            const sampleRate = buffer.sampleRate;
-            const numSamples = buffer.length;
-            const dataSize = numChannels * numSamples * 2; // 16-bit PCM
-
+            const numChannels = buffer.numberOfChannels, sampleRate = buffer.sampleRate, numSamples = buffer.length;
+            const dataSize = numChannels * numSamples * 2;
             const bufferSize = 44 + dataSize;
             const ab = new ArrayBuffer(bufferSize);
             const view = new DataView(ab);
-
             writeString(view, 0, 'RIFF');
-            view.setUint32(4, 36 + dataSize, true); // file-size - 8
+            view.setUint32(4, 36 + dataSize, true);
             writeString(view, 8, 'WAVE');
             writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true); // PCM
-            view.setUint16(20, 1, true); // 1 = PCM
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
             view.setUint16(22, numChannels, true);
             view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * numChannels * 2, true); // byteRate
-            view.setUint16(32, numChannels * 2, true); // blockAlign
-            view.setUint16(34, 16, true); // bitsPerSample
+            view.setUint32(28, sampleRate * numChannels * 2, true);
+            view.setUint16(32, numChannels * 2, true);
+            view.setUint16(34, 16, true);
             writeString(view, 36, 'data');
             view.setUint32(40, dataSize, true);
-
-            // チャンネルデータをインターリーブ
             const pcmData = new DataView(new ArrayBuffer(dataSize));
             let offset = 0;
             const channelsData = [];
-            for (let i = 0; i < numChannels; i++) {
-                channelsData.push(buffer.getChannelData(i));
-            }
-            
+            for (let i = 0; i < numChannels; i++) channelsData.push(buffer.getChannelData(i));
             for (let i = 0; i < numSamples; i++) {
                 for (let c = 0; c < numChannels; c++) {
                     let s = Math.max(-1, Math.min(1, channelsData[c][i]));
@@ -1078,42 +910,30 @@ L]</textarea>
                     offset += 2;
                 }
             }
-            
-            // DataViewのデータをArrayBufferのUint8Arrayとしてコピー
             new Uint8Array(ab, 44).set(new Uint8Array(pcmData.buffer));
-
-            // Base64エンコード
             const uint8 = new Uint8Array(ab);
-            const base64 = btoa(String.fromCharCode.apply(null, uint8));
-            return base64;
+            return btoa(String.fromCharCode.apply(null, uint8));
         }
 
-        /**
-         * Base64 (WAV) を AudioBufferに変換
-         */
         async function base64ToAudioBuffer(base64) {
             if (!(await initAudio())) return null;
             try {
                 const binaryString = atob(base64);
                 const len = binaryString.length;
                 const bytes = new Uint8Array(len);
-                for (let i = 0; i < len; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                const arrayBuffer = bytes.buffer;
-                return await audioContext.decodeAudioData(arrayBuffer);
+                for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+                return await audioContext.decodeAudioData(bytes.buffer);
             } catch (e) {
                 log(`Base64のデコードに失敗: ${e.message}`, 'error');
                 return null;
             }
         }
         
-        // [Save Project]
         saveProjectButton.onclick = () => {
             log('プロジェクトを保存中...', 'info');
             try {
                 const project = {
-                    version: 1,
+                    version: 1.1,
                     directory: dirInput.value,
                     files: {
                         playBat: { name: playBatInput.value, content: batEditor.value },
@@ -1122,56 +942,43 @@ L]</textarea>
                         zms: { name: zmsLabel.textContent, content: zmsEditor.value },
                     },
                     samples: {},
-                    sources: {} // ソース音声は保存しない (容量が大きすぎるため)
+                    sources: {} // ソースは容量大のため保存しない
                 };
-                
-                // サンプルバンクの音声をBase64に
                 audioBuffers.forEach((buffer, name) => {
                     project.samples[name] = audioBufferToWavBase64(buffer);
                 });
-
                 const json = JSON.stringify(project);
                 const blob = new Blob([json], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
-                
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'web_zmusic_project.json';
                 a.click();
                 URL.revokeObjectURL(url);
                 log('プロジェクトを保存しました。', 'success');
-
             } catch (e) {
                 log(`プロジェクトの保存に失敗しました: ${e.message}`, 'error');
             }
         };
         
-        // [Load Project]
         loadProjectInput.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = async (event) => {
                 try {
-                    const json = event.target.result;
-                    const project = JSON.parse(json);
-
-                    if (!project.version || !project.files || !project.samples) {
-                        throw new Error('無効なプロジェクトファイルです。');
-                    }
+                    const project = JSON.parse(event.target.result);
+                    if (!project.version || !project.files || !project.samples) throw new Error('無効なファイル');
                     
                     log('プロジェクトをロード中...', 'info');
-                    stopMML(); // 再生中のMMLを停止
+                    stopMML();
 
-                    // エディタの内容を復元
                     dirInput.value = project.directory;
                     playBatInput.value = project.files.playBat.name;
                     batEditor.value = project.files.playBat.content;
                     stopBatInput.value = project.files.stopBat.name;
                     stopBatEditor.value = project.files.stopBat.content;
                     
-                    // cfg/zmsは名前も復元
                     const cfgName = project.files.cfg ? project.files.cfg.name : 'gabba.cfg';
                     const cfgContent = project.files.cfg ? project.files.cfg.content : '';
                     cfgLabel.textContent = cfgName;
@@ -1182,51 +989,36 @@ L]</textarea>
                     zmsLabel.textContent = zmsName;
                     zmsEditor.value = zmsContent;
 
-                    // UIを更新
                     updateEditorLabels();
-                    
-                    // サンプルバンクをクリア
                     audioBuffers.clear();
                     
-                    // サンプルをデコードして復元
                     const sampleNames = Object.keys(project.samples);
                     for (const name of sampleNames) {
-                        const base64 = project.samples[name];
                         try {
-                            const buffer = await base64ToAudioBuffer(base64);
-                            if (buffer) {
-                                audioBuffers.set(name, buffer);
-                            } else {
-                                log(`サンプルのデコードに失敗: ${name}`, 'error');
-                            }
+                            const buffer = await base64ToAudioBuffer(project.samples[name]);
+                            if (buffer) audioBuffers.set(name, buffer);
                         } catch (e) {
                              log(`サンプルのデコード中にエラー: ${name}`, 'error');
                         }
                     }
-                    
                     updateSampleBankList();
                     log('プロジェクトをロードしました。', 'success');
-                    
                 } catch (e) {
-                    log(`プロジェクトのロードに失敗しました: ${e.message}`, 'error');
+                    log(`プロジェクトのロードに失敗: ${e.message}`, 'error');
                 } finally {
-                    loadProjectInput.value = ''; // 次回同じファイルをロードできるように
+                    loadProjectInput.value = '';
                 }
             };
             reader.readAsText(file);
         };
         
         // --- 8. UI連動 ---
-
-        // ファイル名入力とエディタラベル/Promptを連動
         function updateEditorLabels() {
             const dir = dirInput.value;
             promptDisplay.textContent = `${dir}>`;
-            
             playBatLabel.textContent = playBatInput.value;
             stopBatLabel.textContent = stopBatInput.value;
             
-            // BAT内のファイル名から CFG/ZMS のラベルを推測
             const batText = batEditor.value;
             const zpMatch = batText.match(/zp\s+([\w\.]+)/);
             if (zpMatch) {
@@ -1243,42 +1035,31 @@ L]</textarea>
         dirInput.onchange = updateEditorLabels;
         playBatInput.onchange = updateEditorLabels;
         stopBatInput.onchange = updateEditorLabels;
-        batEditor.onchange = updateEditorLabels; // BAT編集時もラベル更新
+        batEditor.onchange = updateEditorLabels;
 
-        // メインコントロールボタン
         playButton.onclick = startMML;
         stopButton.onclick = stopMML;
         
-        // スマホ用タブ切り替え
         const tabContainer = $('tabContainer');
         const tabContents = document.querySelectorAll('.tab-content');
         const tabButtons = document.querySelectorAll('.tab-button');
         
         function switchTab(targetTab) {
             tabContents.forEach(content => {
-                if (content.id === targetTab) {
-                    content.classList.add('active');
-                } else {
-                    content.classList.remove('active');
-                }
+                content.classList.toggle('active', content.id === targetTab);
             });
             tabButtons.forEach(button => {
-                if (button.dataset.tab === targetTab) {
-                    button.classList.add('border-green-400', 'text-green-400');
-                } else {
-                    button.classList.remove('border-green-400', 'text-green-400');
-                }
+                button.classList.toggle('border-green-400', button.dataset.tab === targetTab);
+                button.classList.toggle('text-green-400', button.dataset.tab === targetTab);
+                button.classList.toggle('text-gray-400', button.dataset.tab !== targetTab);
             });
         }
         
         if (tabContainer) {
             tabContainer.onclick = (e) => {
                 const button = e.target.closest('.tab-button');
-                if (button) {
-                    switchTab(button.dataset.tab);
-                }
+                if (button) switchTab(button.dataset.tab);
             };
-            // 初期タブを設定
             switchTab('tab1');
         }
 
@@ -1287,12 +1068,8 @@ L]</textarea>
             updateEditorLabels();
             updateSourceAudioList();
             updateSampleBankList();
-            
-            // PC表示（md以上）の場合は全タブを強制的にアクティブ化
             if (window.innerWidth >= 768) {
-                tabContents.forEach(content => {
-                    content.classList.add('active');
-                });
+                tabContents.forEach(content => content.classList.add('active'));
             }
         };
 
