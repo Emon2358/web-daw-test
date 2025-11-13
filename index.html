@@ -156,6 +156,19 @@
                 <div>
                     <h3 class="text-lg font-medium text-gray-300 mb-2">4. サンプルバンク (.m44 / .wav / .mp3)</h3>
                     <p class="text-sm text-gray-400 mb-2">.cfgファイルから参照される音声サンプルです。</p>
+                    
+                    <!-- ▼▼▼ 追加: バンクへの直接ロード ▼▼▼ -->
+                    <label class="mb-4 block w-full text-sm text-gray-400
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-lg file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-blue-600 file:text-white
+                        hover:file:bg-blue-700 cursor-pointer">
+                        + バンクにサンプルをロード
+                        <input type="file" id="bankAudioUpload" multiple accept="audio/*" class="hidden">
+                    </label>
+                    <!-- ▲▲▲ 追加 ▲▲▲ -->
+                    
                     <div id="fileList" class="bg-gray-900 p-3 rounded-md h-48 overflow-y-auto border border-gray-700">
                         <p class="text-gray-500">音声ファイルをロードまたは録音してください...</p>
                     </div>
@@ -315,8 +328,15 @@ c d f c d f b
             const fileList = document.getElementById('fileList');
 
             const sourceAudioUpload = document.getElementById('sourceAudioUpload');
-            sourceAudioUpload.addEventListener('change', (event) => {
+            sourceAudioUpload.addEventListener('change', async (event) => { // ▼▼▼ 変更: async追加
                 initAudio();
+                // ▼▼▼ 追加: AudioContextの再開 ▼▼▼
+                if (audioContext && audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                    log('AudioContext resumed.');
+                }
+                // ▲▲▲ 追加 ▲▲▲
+                
                 const files = event.target.files;
                 if (files.length === 0) return;
 
@@ -354,6 +374,39 @@ c d f c d f b
                 });
             });
             
+            // ▼▼▼ 追加: バンクへの直接ロード (Section 4) ▼▼▼
+            const bankAudioUpload = document.getElementById('bankAudioUpload');
+            bankAudioUpload.addEventListener('change', async (event) => {
+                initAudio();
+                if (audioContext && audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                const files = event.target.files;
+                if (files.length === 0) return;
+
+                if (fileList.querySelector('p')) {
+                    fileList.innerHTML = ''; // 「...」メッセージをクリア
+                }
+                
+                Array.from(files).forEach(file => {
+                    if (audioBuffers.has(file.name)) {
+                        log(`Warning: File ${file.name} already exists. Overwriting.`, true);
+                        // UI上の既存アイテムを削除（重複を防ぐ）
+                        Array.from(fileList.children).forEach(child => {
+                            if (child.textContent === file.name) {
+                                child.remove();
+                            }
+                        });
+                    }
+                    addAudioFile(file.name, file);
+                });
+                
+                // inputの値をクリアして同じファイルを再度選択できるようにする
+                bankAudioUpload.value = '';
+            });
+            // ▲▲▲ 追加 ▲▲▲
+
             function addAudioFile(fileName, fileObjectOrBlob) {
                 initAudio(); // 念のため実行
                 
