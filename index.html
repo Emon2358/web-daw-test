@@ -112,8 +112,22 @@
                     <div id="samplerEditor" class="bg-gray-900 p-4 rounded-md border border-gray-700">
                         <p id="samplerStatus" class="text-gray-400 mb-2 text-sm">↑ ソース音声リストからファイルを選択してください。</p>
                         
-                        <!-- 波形表示 -->
-                        <canvas id="waveformCanvas" class="w-full h-24 bg-black rounded-md cursor-crosshair"></canvas>
+                        <!-- ▼▼▼ 修正: ズームボタンとコンテナ ▼▼▼ -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <button id="zoomOutButton" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-lg text-sm">-</button>
+                            <button id="zoomInButton" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-lg text-sm">+</button>
+                            <!-- ▼▼▼ 追加 ▼▼▼ -->
+                            <button id="zoomAllButton" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-lg text-sm">All</button>
+                            <!-- ▲▲▲ 追加 ▲▲▲ -->
+                            <span id="zoomLevelIndicator" class="text-sm text-gray-400 ml-2">Zoom: 1x</span>
+                        </div>
+
+                        <!-- 波形表示用コンテナ (スクロール対応) -->
+                        <div id="waveformContainer" class="w-full h-24 bg-black rounded-md overflow-x-auto border border-gray-700">
+                            <canvas id="waveformCanvas" class="h-full cursor-crosshair"></canvas>
+                        </div>
+                        <!-- ▲▲▲ 修正 ▲▲▲ -->
+                        
                         <p id="selectionInfo" class="text-sm text-gray-400 mt-1 h-4"></p>
 
                         <!-- 保存 -->
@@ -214,7 +228,7 @@ c d f c d f f
 c d f c d f a
 c d f c d f f
 c d f c d f b
-</textarea>
+</G>
                 </div>
 
             </div>
@@ -233,7 +247,6 @@ c d f c d f b
             let globalGain;                 // グローバルゲイン（Stop用）
             const consoleLog = document.getElementById('consoleLog');
             
-            <!-- ▼▼▼ 修正 (log 関数の定義を追加) ▼▼▼ -->
             function log(message, isError = false) {
                 if (!consoleLog) {
                     console.error(message); // コンソール要素が見つからない場合はフォールバック
@@ -247,26 +260,35 @@ c d f c d f b
                 consoleLog.appendChild(p);
                 consoleLog.scrollTop = consoleLog.scrollHeight; // 自動スクロール
             }
-            <!-- ▲▲▲ 修正 ▲▲▲ -->
             
-            // ▼▼▼ 新規追加 (サンプラー用) ▼▼▼
+            // ▼▼▼ 修正 (サンプラー用変数) ▼▼▼
             const sourceAudioBuffers = new Map(); // サンプリング元のAudioBuffer
             const sourceAudioList = document.getElementById('sourceAudioList');
             const samplerEditor = document.getElementById('samplerEditor');
             const samplerStatus = document.getElementById('samplerStatus');
+            const waveformContainer = document.getElementById('waveformContainer'); // Waveformコンテナ
             const waveformCanvas = document.getElementById('waveformCanvas');
             const selectionInfo = document.getElementById('selectionInfo');
             const sampleFileName = document.getElementById('sampleFileName');
             const saveSampleButton = document.getElementById('saveSampleButton');
+            const zoomInButton = document.getElementById('zoomInButton');
+            const zoomOutButton = document.getElementById('zoomOutButton');
+            const zoomLevelIndicator = document.getElementById('zoomLevelIndicator');
             const canvasCtx = waveformCanvas.getContext('2d');
             
+            <!-- ▼▼▼ 追加 ▼▼▼ -->
+            const zoomAllButton = document.getElementById('zoomAllButton');
+            <!-- ▲▲▲ 追加 ▲▲▲ -->
+
             let currentSourceBuffer = null; // 現在編集中のソースバッファ
             let selectionStartSample = 0;
             let selectionEndSample = 0;
-            let selectionStartX = 0;
-            let selectionEndX = 0;
             let isDragging = false;
-            // ▲▲▲ 新規追加 (サンプラー用) ▲▲▲
+            
+            let currentZoom = 1;
+            const maxZoom = 32;
+            const minZoom = 1;
+            // ▲▲▲ 修正 ▲▲▲
 
             // 録音用
             let mediaRecorder;
@@ -292,7 +314,6 @@ c d f c d f b
             const audioUpload = document.getElementById('audioUpload'); // このIDはもう存在しない
             const fileList = document.getElementById('fileList');
 
-            // ▼▼▼ 修正 (ソース音声アップロード処理) ▼▼▼
             const sourceAudioUpload = document.getElementById('sourceAudioUpload');
             sourceAudioUpload.addEventListener('change', (event) => {
                 initAudio();
@@ -329,13 +350,10 @@ c d f c d f b
                     reader.onerror = () => {
                         log(`Error reading file ${fileName}`, true);
                     };
-                    reader.readAsArrayBuffer(file); // 'fileObjectOrBlob' ではなく 'file' を使用
+                    reader.readAsArrayBuffer(file);
                 });
             });
             
-            // (既存の audioUpload.addEventListener は削除)
-
-            // 音声ファイルを *サンプルバンク* に読み込み、AudioBufferとして保存する共通関数
             function addAudioFile(fileName, fileObjectOrBlob) {
                 initAudio(); // 念のため実行
                 
@@ -445,7 +463,7 @@ c d f c d f b
             });
 
 
-            // --- 2.5. 波形サンプラー (新機能) ---
+            // --- 2.5. 波形サンプラー (ズーム機能対応) ---
 
             // ソースリストからクリックされたらサンプラーにロード
             function loadSourceAudioForSampling(fileName) {
@@ -458,17 +476,39 @@ c d f c d f b
                 samplerStatus.textContent = `Editing: ${fileName} (${currentSourceBuffer.duration.toFixed(2)}s)`;
                 selectionStartSample = 0;
                 selectionEndSample = 0;
-                selectionStartX = 0;
-                selectionEndX = 0;
                 isDragging = false;
                 saveSampleButton.disabled = true;
-                selectionInfo.textContent = 'Drag on waveform to select range.';
+                <!-- ▼▼▼ 修正: 操作ガイドを更新 ▼▼▼ -->
+                selectionInfo.textContent = 'Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom';
                 
-                // 波形を描画
+                // ▼▼▼ 修正: ズームとパンをリセット ▼▼▼
+                currentZoom = 1;
+                zoomLevelIndicator.textContent = 'Zoom: 1x';
+                waveformContainer.scrollLeft = 0;
+                updateWaveformView(); // 波形を描画
+                // ▲▲▲ 修正 ▲▲▲
+            }
+            
+            // ▼▼▼ 新規: ズームレベルに応じてCanvas幅を更新し再描画する ▼▼▼
+            function updateWaveformView() {
+                if (!currentSourceBuffer) return;
+
+                // コンテナの現在の表示幅を基準にする
+                const containerWidth = waveformContainer.clientWidth;
+                if (containerWidth === 0) return; // コンテナが非表示の場合は何もしない
+
+                const canvasWidth = containerWidth * currentZoom;
+                waveformCanvas.width = canvasWidth;
+                
+                // Canvasの高さはコンテナに追従 (styleでh-fullが設定されているため)
+                waveformCanvas.height = waveformContainer.clientHeight;
+                
+                zoomLevelIndicator.textContent = `Zoom: ${currentZoom}x`;
+                
                 drawWaveform();
             }
 
-            // 波形描画
+            // 波形描画 (ズーム対応)
             function drawWaveform() {
                 if (!currentSourceBuffer) return;
 
@@ -477,24 +517,35 @@ c d f c d f b
                 canvasCtx.clearRect(0, 0, width, height);
 
                 const data = currentSourceBuffer.getChannelData(0); // チャンネル0 (モノラル)
-                const step = Math.ceil(data.length / width);
+                // ▼▼▼ 修正: 描画ステップの計算 ▼▼▼
+                // 1ピクセルあたりが担当するサンプル数を計算
+                const samplesPerPixel = currentSourceBuffer.length / width;
+                const step = Math.max(1, Math.floor(samplesPerPixel));
+                // ▲▲▲ 修正 ▲▲▲
+                
                 const amp = height / 2;
 
                 canvasCtx.lineWidth = 1;
-                <!-- ▼▼▼ 修正 (波形の色を明るい緑に変更) ▼▼▼ -->
                 canvasCtx.strokeStyle = '#34d399'; // emerald-400 (明るい緑)
-                <!-- ▲▲▲ 修正 ▲▲▲ -->
                 canvasCtx.beginPath();
 
                 for (let i = 0; i < width; i++) {
                     let min = 1.0;
                     let max = -1.0;
-
+                    
+                    // ▼▼▼ 修正: サンプル範囲の計算 ▼▼▼
+                    const sampleStartIndex = Math.floor(i * samplesPerPixel);
+                    
                     for (let j = 0; j < step; j++) {
-                        const datum = data[(i * step) + j];
+                        const sampleIndex = sampleStartIndex + j;
+                        if (sampleIndex >= data.length) break;
+                        
+                        const datum = data[sampleIndex];
                         if (datum < min) min = datum;
                         if (datum > max) max = datum;
                     }
+                    // ▲▲▲ 修正 ▲▲▲
+                    
                     canvasCtx.moveTo(i, (1 + min) * amp);
                     canvasCtx.lineTo(i, (1 + max) * amp);
                 }
@@ -502,41 +553,47 @@ c d f c d f b
 
                 // 選択範囲のハイライト
                 if (selectionStartSample !== selectionEndSample) {
-                    <!-- ▼▼▼ 修正 (選択範囲の色を波形に合わせる) ▼▼▼ -->
                     canvasCtx.fillStyle = 'rgba(74, 222, 128, 0.4)'; // emerald-400 with alpha
-                    <!-- ▲▲▲ 修正 ▲▲▲ -->
-                    const startX = Math.round((selectionStartSample / currentSourceBuffer.length) * width);
-                    const endX = Math.round((selectionEndSample / currentSourceBuffer.length) * width);
+                    // ▼▼▼ 修正: サンプル位置をCanvasのX座標に変換 ▼▼▼
+                    const startX = sampleToX(selectionStartSample);
+                    const endX = sampleToX(selectionEndSample);
+                    // ▲▲▲ 修正 ▲▲▲
                     canvasCtx.fillRect(startX, 0, endX - startX, height);
                 }
             }
 
-            // Canvasからサンプルインデックスへ変換
+            // CanvasのX座標からサンプルインデックスへ変換
             function xToSample(x) {
                 if (!currentSourceBuffer) return 0;
                 return Math.round((x / waveformCanvas.width) * currentSourceBuffer.length);
             }
+            
+            // ▼▼▼ 新規: サンプルインデックスからCanvasのX座標へ変換 ▼▼▼
+            function sampleToX(sample) {
+                if (!currentSourceBuffer) return 0;
+                return Math.round((sample / currentSourceBuffer.length) * waveformCanvas.width);
+            }
 
-            // Canvasイベント
+            // Canvasイベント (ドラッグ選択)
             waveformCanvas.addEventListener('mousedown', (e) => {
                 if (!currentSourceBuffer) return;
                 isDragging = true;
-                selectionStartX = e.offsetX;
-                selectionStartSample = xToSample(selectionStartX);
-                selectionEndX = selectionStartX;
+                // e.offsetX は Canvas 全体 (ズーム後) の左端からのX座標
+                selectionStartSample = xToSample(e.offsetX);
                 selectionEndSample = selectionStartSample;
-                drawWaveform();
+                drawWaveform(); // ハイライトをリセット
             });
 
             waveformCanvas.addEventListener('mousemove', (e) => {
                 if (!isDragging || !currentSourceBuffer) return;
-                selectionEndX = e.offsetX;
-                selectionEndSample = xToSample(selectionEndX);
+                selectionEndSample = xToSample(e.offsetX);
                 
                 // 選択範囲の時間表示
-                const startT = (Math.min(selectionStartSample, selectionEndSample) / currentSourceBuffer.sampleRate).toFixed(2);
-                const endT = (Math.max(selectionStartSample, selectionEndSample) / currentSourceBuffer.sampleRate).toFixed(2);
-                selectionInfo.textContent = `Sel: ${startT}s - ${endT}s`;
+                const startT = (Math.min(selectionStartSample, selectionEndSample) / currentSourceBuffer.sampleRate).toFixed(3);
+                const endT = (Math.max(selectionStartSample, selectionEndSample) / currentSourceBuffer.sampleRate).toFixed(3);
+                <!-- ▼▼▼ 修正: 操作ガイドのテキストを上書きしないように変更 ▼▼▼ -->
+                selectionInfo.innerHTML = `Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom <span class="text-green-400 ml-2">Sel: ${startT}s - ${endT}s</span>`;
+                <!-- ▲▲▲ 修正 ▲▲▲ -->
 
                 drawWaveform(); // リアルタイムでハイライト更新
             });
@@ -552,17 +609,86 @@ c d f c d f b
 
                 if (selectionStartSample === selectionEndSample) {
                     saveSampleButton.disabled = true;
-                    selectionInfo.textContent = 'Drag on waveform to select range.';
+                    <!-- ▼▼▼ 修正: 操作ガイドをリセット ▼▼▼ -->
+                    selectionInfo.textContent = 'Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom';
+                    <!-- ▲▲▲ 修正 ▲▲▲ -->
                 } else {
                     saveSampleButton.disabled = false;
-                    const startT = (selectionStartSample / currentSourceBuffer.sampleRate).toFixed(2);
-                    const endT = (selectionEndSample / currentSourceBuffer.sampleRate).toFixed(2);
-                    selectionInfo.textContent = `Selected: ${startT}s - ${endT}s`;
+                    const startT = (selectionStartSample / currentSourceBuffer.sampleRate).toFixed(3);
+                    const endT = (selectionEndSample / currentSourceBuffer.sampleRate).toFixed(3);
+                    <!-- ▼▼▼ 修正: 操作ガイドをリセット ▼▼▼ -->
+                    selectionInfo.innerHTML = `Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom <span class="text-green-400 ml-2">Selected: ${startT}s - ${endT}s</span>`;
+                    <!-- ▲▲▲ 修正 ▲▲▲ -->
                 }
                 drawWaveform(); // 最終的なハイライト
             }
             waveformCanvas.addEventListener('mouseup', endDrag);
             waveformCanvas.addEventListener('mouseleave', endDrag);
+
+            // ▼▼▼ 新規: ズームボタンのロジック ▼▼▼
+            function zoom(factor, anchorX = null) {
+                if (!currentSourceBuffer) return;
+
+                const newZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom * factor));
+                if (newZoom === currentZoom) return;
+
+                // ズーム中心の計算
+                // anchorX が null (ボタンクリック) の場合は、表示領域の中心を基準にする
+                // anchorX が指定 (ホイールズーム) されている場合は、そのX座標を基準にする
+                const anchor = anchorX !== null ? anchorX : waveformContainer.scrollLeft + waveformContainer.clientWidth / 2;
+                const centerPointRatio = anchor / (waveformContainer.clientWidth * currentZoom);
+
+                currentZoom = newZoom;
+                updateWaveformView(); // canvas幅が更新される
+                
+                // ズーム後のスクロール位置を調整
+                const newScrollLeft = (centerPointRatio * waveformContainer.clientWidth * currentZoom) - (anchorX !== null ? (anchor - waveformContainer.scrollLeft) : waveformContainer.clientWidth / 2);
+                waveformContainer.scrollLeft = newScrollLeft;
+            }
+
+            zoomInButton.addEventListener('click', () => zoom(2.0));
+            zoomOutButton.addEventListener('click', () => zoom(0.5));
+            
+            zoomAllButton.addEventListener('click', () => {
+                if (!currentSourceBuffer) return;
+                currentZoom = 1;
+                updateWaveformView();
+                waveformContainer.scrollLeft = 0;
+            });
+
+            // ▼▼▼ 新規: マウスホイールによるズーム＆パン ▼▼▼
+            waveformContainer.addEventListener('wheel', (e) => {
+                if (!currentSourceBuffer) return;
+                
+                e.preventDefault(); // ページのスクロールを防止
+                e.stopPropagation();
+
+                if (e.ctrlKey) {
+                    // --- ズーム ---
+                    // マウスカーソルのコンテナ内X座標
+                    const rect = waveformContainer.getBoundingClientRect();
+                    const mouseXInContainer = e.clientX - rect.left;
+                    // ズームアンカー (現在のスクロール位置 + マウスX座標)
+                    const anchorX = waveformContainer.scrollLeft + mouseXInContainer;
+                    
+                    const delta = e.deltaY > 0 ? 0.8 : 1.25; // deltaY > 0 は下方向(縮小), < 0 は上方向(拡大)
+                    zoom(delta, anchorX);
+                    
+                } else {
+                    // --- パン ---
+                    // ホイールの上下(deltaY)で左右(scrollLeft)にパンする
+                    waveformContainer.scrollLeft += e.deltaY;
+                }
+            });
+            
+            // ▼▼▼ 新規: ウィンドウリサイズ対応 ▼▼▼
+            window.addEventListener('resize', () => {
+                if (currentSourceBuffer) {
+                    // リサイズ時に再描画（スクロール位置は保持される）
+                    updateWaveformView();
+                }
+            });
+
 
             // 切り出し保存
             saveSampleButton.addEventListener('click', () => {
@@ -596,7 +722,9 @@ c d f c d f b
                     saveSampleButton.disabled = true;
                     selectionStartSample = 0;
                     selectionEndSample = 0;
-                    selectionInfo.textContent = 'Drag on waveform to select range.';
+                    <!-- ▼▼▼ 修正: 操作ガイドをリセット ▼▼▼ -->
+                    selectionInfo.textContent = 'Drag: Select / Wheel: Pan / Ctrl+Wheel: Zoom';
+                    <!-- ▲▲▲ 修正 ▲▲▲ -->
                     drawWaveform();
 
                 } catch (err) {
@@ -882,8 +1010,10 @@ c d f c d f b
                     try { source.stop(0); } catch (e) {}
                 });
                 playingSources = [];
-                globalGain.gain.cancelScheduledValues(audioContext.currentTime);
-                globalGain.gain.setValueAtTime(0.0, audioContext.currentTime);
+                if (globalGain) {
+                    globalGain.gain.cancelScheduledValues(audioContext.currentTime);
+                    globalGain.gain.setValueAtTime(0.0, audioContext.currentTime);
+                }
             }
 
             document.getElementById('stopButton').addEventListener('click', () => {
@@ -944,11 +1074,9 @@ c d f c d f b
 
             // --- 7. セーブ＆ロード機能 ---
 
-            // ▼▼▼ Save/Load ボタンの要素取得 ▼▼▼
             const saveProjectButton = document.getElementById('saveProjectButton');
             const loadProjectInput = document.getElementById('loadProjectInput');
 
-            // ▼▼▼ Save処理 ▼▼▼
             saveProjectButton.addEventListener('click', async () => {
                 log('Saving project...');
                 try {
@@ -996,7 +1124,6 @@ c d f c d f b
                 }
             });
 
-            // ▼▼▼ Load処理 ▼▼▼
             loadProjectInput.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -1041,7 +1168,6 @@ c d f c d f b
                                 const response = await fetch(sample.dataUrl);
                                 const arrayBuffer = await response.arrayBuffer();
                                 initAudio(); // audioContextを確実に初期化
-                                <!-- ▼▼▼ 修正 (デコード失敗のcatchを追加) ▼▼▼ -->
                                 try {
                                     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                                     
@@ -1052,7 +1178,6 @@ c d f c d f b
                                     log(`Error decoding sample ${sample.fileName} during project load: ${decodeError.message}`, true);
                                     return null;
                                 }
-                                <!-- ▲▲▲ 修正 ▲▲▲ -->
                             });
 
                             const loadedFileNames = (await Promise.all(decodePromises)).filter(name => name !== null);
