@@ -481,7 +481,9 @@ c d f c d f b
                 const amp = height / 2;
 
                 canvasCtx.lineWidth = 1;
-                canvasCtx.strokeStyle = '#22c55e'; // green-500
+                <!-- ▼▼▼ 修正 (波形の色を明るい緑に変更) ▼▼▼ -->
+                canvasCtx.strokeStyle = '#34d399'; // emerald-400 (明るい緑)
+                <!-- ▲▲▲ 修正 ▲▲▲ -->
                 canvasCtx.beginPath();
 
                 for (let i = 0; i < width; i++) {
@@ -500,7 +502,9 @@ c d f c d f b
 
                 // 選択範囲のハイライト
                 if (selectionStartSample !== selectionEndSample) {
-                    canvasCtx.fillStyle = 'rgba(167, 139, 250, 0.3)'; // purple-400 with alpha
+                    <!-- ▼▼▼ 修正 (選択範囲の色を波形に合わせる) ▼▼▼ -->
+                    canvasCtx.fillStyle = 'rgba(74, 222, 128, 0.4)'; // emerald-400 with alpha
+                    <!-- ▲▲▲ 修正 ▲▲▲ -->
                     const startX = Math.round((selectionStartSample / currentSourceBuffer.length) * width);
                     const endX = Math.round((selectionEndSample / currentSourceBuffer.length) * width);
                     canvasCtx.fillRect(startX, 0, endX - startX, height);
@@ -1037,11 +1041,18 @@ c d f c d f b
                                 const response = await fetch(sample.dataUrl);
                                 const arrayBuffer = await response.arrayBuffer();
                                 initAudio(); // audioContextを確実に初期化
-                                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                                
-                                audioBuffers.set(sample.fileName, audioBuffer);
-                                // UI更新 (メインスレッドで行う)
-                                return sample.fileName;
+                                <!-- ▼▼▼ 修正 (デコード失敗のcatchを追加) ▼▼▼ -->
+                                try {
+                                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                                    
+                                    audioBuffers.set(sample.fileName, audioBuffer);
+                                    // UI更新 (メインスレッドで行う)
+                                    return sample.fileName;
+                                } catch (decodeError) {
+                                    log(`Error decoding sample ${sample.fileName} during project load: ${decodeError.message}`, true);
+                                    return null;
+                                }
+                                <!-- ▲▲▲ 修正 ▲▲▲ -->
                             });
 
                             const loadedFileNames = (await Promise.all(decodePromises)).filter(name => name !== null);
